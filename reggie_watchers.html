@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reggie Watchers</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
+        :root {
+            --bg-color: #0f172a;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --accent-mazie: #f472b6;
+            /* pink */
+            --accent-angie: #38bdf8;
+            /* blue */
+            --accent-ilana: #a78bfa;
+            /* purple */
+            --accent-dennis: #34d399;
+            /* green */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(244, 114, 182, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(56, 189, 248, 0.05) 0%, transparent 50%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            padding: 40px 20px 20px;
+            text-align: center;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--card-border);
+            box-sizing: border-box;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #f8fafc, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .current-watcher-banner {
+            margin-top: 15px;
+            display: inline-block;
+            padding: 10px 24px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .watcher-name {
+            padding: 2px 8px;
+            border-radius: 6px;
+            margin-left: 6px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        main {
+            max-width: 900px;
+            width: 100%;
+            padding: 20px 20px 40px;
+            box-sizing: border-box;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            main {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        section {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 30px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Important Info Section */
+        .info-section {
+            grid-column: 1 / -1;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 16px;
+        }
+
+        .info-card h3 {
+            margin-top: 0;
+            color: var(--text-main);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .info-card p,
+        .info-card ul {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin: 0 0 10px 0;
+            line-height: 1.5;
+        }
+
+        .info-card ul {
+            padding-left: 20px;
+            margin-bottom: 0;
+        }
+
+        .info-card strong {
+            color: var(--text-main);
+        }
+
+        /* Itinerary Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 5px;
+            bottom: 5px;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -30px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            border: 4px solid var(--card-bg);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+            z-index: 2;
+        }
+
+        .timeline-content {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .timeline-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .timeline-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .timeline-item.past {
+            opacity: 0.5;
+            filter: grayscale(0.8);
+        }
+
+        .timeline-item.current .timeline-content {
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .timeline-item.current .timeline-dot {
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2);
+            animation: pulse 2s infinite;
+        }
+
+        .timeline-item.future {
+            opacity: 0.8;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+            }
+
+            70% {
+                transform: scale(1.1);
+                box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+            }
+        }
+
+        /* Calendar */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-header button {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendar-header button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            text-align: center;
+        }
+
+        .weekday {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding-bottom: 10px;
+        }
+
+        .day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 0.9rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid transparent;
+            cursor: default;
+            position: relative;
+            transition: transform 0.2s;
+        }
+
+        .day:hover {
+            transform: scale(1.1);
+        }
+
+        .day.empty {
+            background: transparent;
+            pointer-events: none;
+        }
+
+        .day.mazie {
+            background: rgba(244, 114, 182, 0.15);
+            border-color: rgba(244, 114, 182, 0.3);
+            color: #fdf2f8;
+        }
+
+        .day.angie {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: rgba(56, 189, 248, 0.3);
+            color: #f0f9ff;
+        }
+
+        .day.ilana {
+            background: rgba(167, 139, 250, 0.15);
+            border-color: rgba(167, 139, 250, 0.3);
+            color: #f5f3ff;
+        }
+
+        .day.dennis {
+            background: rgba(52, 211, 153, 0.15);
+            border-color: rgba(52, 211, 153, 0.3);
+            color: #ecfdf5;
+        }
+
+        .day.today::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 0 4px white;
+        }
+
+        .legend {
+            margin-top: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 0.85rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        /* Color classes */
+        .color-mazie {
+            background: var(--accent-mazie);
+            color: #fff;
+        }
+
+        .color-angie {
+            background: var(--accent-angie);
+            color: #fff;
+        }
+
+        .color-ilana {
+            background: var(--accent-ilana);
+            color: #fff;
+        }
+
+        .color-dennis {
+            background: var(--accent-dennis);
+            color: #111;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Reggie Watchers</h1>
+        <div class="current-watcher-banner" id="banner">
+            Currently watching Reggie: <span id="current-watcher" class="watcher-name">Loading...</span>
+        </div>
+    </header>
+
+    <main>
+        <section class="calendar-section">
+            <h2>🗓️ Schedule</h2>
+
+            <div class="calendar-header">
+                <button id="prev-month">←</button>
+                <div id="month-display" style="font-weight: 600; font-size: 1.1rem;">April 2026</div>
+                <button id="next-month">→</button>
+            </div>
+
+            <div class="calendar-grid" id="calendar-grid">
+                <div class="weekday">Sun</div>
+                <div class="weekday">Mon</div>
+                <div class="weekday">Tue</div>
+                <div class="weekday">Wed</div>
+                <div class="weekday">Thu</div>
+                <div class="weekday">Fri</div>
+                <div class="weekday">Sat</div>
+                <!-- Days injected by JS -->
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color color-dennis"></div> Dennis
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color color-mazie"></div> Mazie
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color color-angie"></div> Angie
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color color-ilana"></div> Ilana
+                </div>
+            </div>
+        </section>
+
+        <section class="itinerary-section">
+            <h2>📅 Itinerary</h2>
+            <div class="timeline">
+
+                <div class="timeline-item" id="event-0">
+                    <div class="timeline-dot color-dennis"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">Start — April 29</div>
+                        <div class="timeline-title">Dennis</div>
+                        <div class="timeline-desc">Dennis has Reggie before the trip.</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item" id="event-1">
+                    <div class="timeline-dot color-mazie"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">April 29 — April 30</div>
+                        <div class="timeline-title">Mazie</div>
+                        <div class="timeline-desc">Mazie takes over until Thursday evening.</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item" id="event-2">
+                    <div class="timeline-dot color-angie"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">April 30 (Evening) — May 7 (After Work)</div>
+                        <div class="timeline-title">Angie</div>
+                        <div class="timeline-desc">Angie will watch Reggie for a week.</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item" id="event-meds">
+                    <div class="timeline-dot color-angie"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">May 2nd</div>
+                        <div class="timeline-title">Angie</div>
+                        <div class="timeline-title">💊 Simparica Trio</div>
+                        <div class="timeline-desc">Give Reggie 1 Simparica Trio tablet (wrap in pill pocket or use
+                            peanut butter).</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item" id="event-3">
+                    <div class="timeline-dot color-ilana"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">May 7 (Evening) — May 10 (Evening)</div>
+                        <div class="timeline-title">Ilana</div>
+                        <div class="timeline-desc">Ilana takes over for the final weekend.</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item" id="event-4">
+                    <div class="timeline-dot color-dennis"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">May 10 (Evening) Onwards</div>
+                        <div class="timeline-title">Dennis</div>
+                        <div class="timeline-desc">Dennis is back and has Reggie!</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="info-section">
+            <h2>🚨 Important Reggie Info</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>🦮 Walking</h3>
+                    <p>Needs to be walked at least <strong>3 times a day</strong>:</p>
+                    <ul>
+                        <li><strong>8:00 AM - 10:00 AM:</strong> First walk</li>
+                        <li><strong>4:00 PM - 7:00 PM:</strong> Second walk</li>
+                        <li><strong>After 9:00 PM:</strong> Bedtime walk</li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <h3>🥣 Feeding</h3>
+                    <p>Feed him <strong>1 cup of dog food</strong> twice a day:</p>
+                    <ul>
+                        <li>Once in the morning</li>
+                        <li>Once in the evening</li>
+                    </ul>
+                    <p>Feel free to give him treats too!<br><strong style="color: #ef4444;">No people food.</strong></p>
+                </div>
+                <div class="info-card">
+                    <h3>💊 Medication</h3>
+                    <p><strong>May 2nd:</strong> Give him <strong>1 Simparica Trio</strong> tablet.</p>
+                    <p><em>Note:</em> He is picky! Wrap it in a pill pocket or crush it up with peanut butter. Make sure
+                        he actually eats it and doesn't spit it out on a rug or under the couch.</p>
+                </div>
+                <div class="info-card">
+                    <h3>🏥 Emergency Vet</h3>
+                    <p><strong>Elliott Bay Animal Hospital</strong> (Primary)<br>
+                        <strong>Phone:</strong> <a href="tel:206-285-7387"
+                            style="color: var(--text-main); text-decoration: none;">206-285-7387</a><br>
+                        <strong>Location:</strong> <a
+                            href="https://maps.google.com/?q=2042+15th+Avenue+West,+Seattle,+WA+98119" target="_blank"
+                            style="color: var(--text-main); text-decoration: none;">2042 15th Ave W, Seattle, WA
+                            98119</a><br>
+                        <a href="https://elliottbayah.com/" target="_blank"
+                            style="color: var(--accent-angie); text-decoration: none;">elliottbayah.com</a>
+                    </p>
+                    <p><strong>VEG Seattle</strong> (Urgent Backup)<br>
+                        If Elliott Bay is unavailable or closed and he needs immediate care.<br>
+                        <a href="https://www.veg.com/locations/washington/seattle" target="_blank"
+                            style="color: var(--accent-angie); text-decoration: none;">veg.com/seattle</a>
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Use exact times in PST to ensure accuracy for the banner
+        const schedule = [
+            { watcher: 'Dennis', colorClass: 'color-dennis', id: 'dennis', start: new Date('2026-01-01T00:00:00-07:00'), end: new Date('2026-04-29T08:00:00-07:00') },
+            { watcher: 'Mazie', colorClass: 'color-mazie', id: 'mazie', start: new Date('2026-04-29T08:00:00-07:00'), end: new Date('2026-04-30T18:00:00-07:00') },
+            { watcher: 'Angie', colorClass: 'color-angie', id: 'angie', start: new Date('2026-04-30T18:00:00-07:00'), end: new Date('2026-05-07T18:00:00-07:00') },
+            { watcher: 'Ilana', colorClass: 'color-ilana', id: 'ilana', start: new Date('2026-05-07T18:00:00-07:00'), end: new Date('2026-05-10T18:00:00-07:00') },
+            { watcher: 'Dennis', colorClass: 'color-dennis', id: 'dennis', start: new Date('2026-05-10T18:00:00-07:00'), end: new Date('2026-12-31T23:59:59-07:00') }
+        ];
+
+        function updateBanner() {
+            const now = new Date();
+            let current = schedule.find(s => now >= s.start && now < s.end);
+
+            if (!current) {
+                current = schedule[schedule.length - 1]; // fallback to the end
+                if (now < schedule[0].start) {
+                    current = schedule[0]; // fallback to start
+                }
+            }
+
+            const watcherSpan = document.getElementById('current-watcher');
+            watcherSpan.textContent = current.watcher;
+            watcherSpan.className = 'watcher-name ' + current.colorClass;
+
+            // Add subtle glow to banner border based on watcher color
+            let glowColor = 'rgba(255,255,255,0.1)';
+            if (current.id === 'mazie') glowColor = 'rgba(244, 114, 182, 0.4)';
+            if (current.id === 'angie') glowColor = 'rgba(56, 189, 248, 0.4)';
+            if (current.id === 'ilana') glowColor = 'rgba(167, 139, 250, 0.4)';
+            if (current.id === 'dennis') glowColor = 'rgba(52, 211, 153, 0.4)';
+
+            document.getElementById('banner').style.boxShadow = `0 4px 20px ${glowColor}`;
+            document.getElementById('banner').style.borderColor = glowColor;
+        }
+
+        function updateItinerary() {
+            const now = new Date();
+            schedule.forEach((s, index) => {
+                const item = document.getElementById('event-' + index);
+                if (!item) return;
+
+                item.classList.remove('past', 'current', 'future');
+
+                if (now >= s.end) {
+                    item.classList.add('past');
+                } else if (now >= s.start && now < s.end) {
+                    item.classList.add('current');
+                } else {
+                    item.classList.add('future');
+                }
+            });
+
+            const medItem = document.getElementById('event-meds');
+            if (medItem) {
+                medItem.classList.remove('past', 'current', 'future');
+                const medDate = new Date('2026-05-02T00:00:00-07:00');
+                const medDateEnd = new Date('2026-05-03T00:00:00-07:00');
+                if (now >= medDateEnd) medItem.classList.add('past');
+                else if (now >= medDate && now < medDateEnd) medItem.classList.add('current');
+                else medItem.classList.add('future');
+            }
+        }
+
+        updateBanner();
+        updateItinerary();
+        setInterval(() => {
+            updateBanner();
+            updateItinerary();
+        }, 60000); // update every minute
+
+        // Calendar Logic
+        let currentMonth = new Date(2026, 3, 1); // April 2026 (0-indexed month)
+
+        function getWatcherForDay(year, month, day) {
+            // Check who has Reggie at noon PST on that day for the visual calendar representation
+            const dateAtNoon = new Date(`${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}T12:00:00-07:00`);
+
+            let current = schedule.find(s => dateAtNoon >= s.start && dateAtNoon < s.end);
+            return current ? current.id : '';
+        }
+
+        function renderCalendar() {
+            const year = currentMonth.getFullYear();
+            const month = currentMonth.getMonth();
+
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            document.getElementById('month-display').textContent = `${monthNames[month]} ${year}`;
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            const today = new Date();
+
+            const grid = document.getElementById('calendar-grid');
+
+            // Keep weekdays header
+            const weekdays = Array.from(grid.querySelectorAll('.weekday'));
+            grid.innerHTML = '';
+            weekdays.forEach(w => grid.appendChild(w));
+
+            // Empty slots before first day
+            for (let i = 0; i < firstDay; i++) {
+                const empty = document.createElement('div');
+                empty.className = 'day empty';
+                grid.appendChild(empty);
+            }
+
+            // Days
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dayEl = document.createElement('div');
+                let watcherClass = getWatcherForDay(year, month, i);
+
+                dayEl.className = `day ${watcherClass}`;
+                dayEl.textContent = i;
+
+                // Highlight today
+                if (today.getFullYear() === year && today.getMonth() === month && today.getDate() === i) {
+                    dayEl.classList.add('today');
+                }
+
+                grid.appendChild(dayEl);
+            }
+        }
+
+        renderCalendar();
+
+        document.getElementById('prev-month').addEventListener('click', () => {
+            currentMonth.setMonth(currentMonth.getMonth() - 1);
+            renderCalendar();
+        });
+
+        document.getElementById('next-month').addEventListener('click', () => {
+            currentMonth.setMonth(currentMonth.getMonth() + 1);
+            renderCalendar();
+        });
+
+    </script>
+</body>
+
+</html>
